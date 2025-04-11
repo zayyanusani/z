@@ -1,0 +1,58 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ListComponent from './ListComponent';
+import './App.css';
+
+function App() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const API_URL = 'https://jsonplaceholder.typicode.com/users';
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setData(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="loading">Loading data...</div>;
+  if (error) return <div className="error">Error: {error}</div>;
+
+  return (
+    <div className="app">
+      <header>
+        <h1>Zayyanu Sani's API Data Viewer</h1>
+        <div className="contact-info">
+          <p>Email: zayyanusanitv@gmail.com</p>
+          <p>Phone: 09071671930</p>
+          <p>Location: Zamfara State</p>
+        </div>
+      </header>
+
+      <main>
+        <ListComponent 
+          items={data}
+          renderItem={(item) => (
+            <div className="user-card">
+              <h3>{item.name}</h3>
+              <p>Email: {item.email}</p>
+              <p>Phone: {item.phone}</p>
+              <p>Company: {item.company?.name}</p>
+            </div>
+          )}
+        />
+      </main>
+    </div>
+  );
+}
+
+export default App;￼Enter
